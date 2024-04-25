@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:51:21 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/24 19:01:30 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/25 12:08:35 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	destroy_simulation_mutexes(t_table *table)
 {
 	pthread_mutex_destroy(&table->simulation);
 	pthread_mutex_destroy(&table->printer);
+	pthread_mutex_destroy(&table->state_checker);
 	pthread_mutex_destroy(&table->life_checker);
 }
 

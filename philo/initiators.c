@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:57:25 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/24 19:06:46 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:47:11 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,6 @@ static int	init_forks(t_table *table)
 {
 	int	i;
 
-	if (pthread_mutex_init(&table->simulation, NULL) != 0)
-		return (0);
-	if (pthread_mutex_init(&table->printer, NULL) != 0)
-		return (pthread_mutex_destroy(&table->simulation), 0);
-	if (pthread_mutex_init(&table->life_checker, NULL) != 0)
-	{
-		pthread_mutex_destroy(&table->simulation);
-		pthread_mutex_destroy(&table->printer);
-		return (0);
-	}
 	i = 0;
 	while (i < table->num_of_philos)
 	{
@@ -59,10 +49,33 @@ static int	init_forks(t_table *table)
 	return (1);
 }
 
+static int	init_mutexes(t_table *table)
+{
+	if (pthread_mutex_init(&table->simulation, NULL) != 0)
+		return (0);
+	if (pthread_mutex_init(&table->printer, NULL) != 0)
+		return (pthread_mutex_destroy(&table->simulation), 0);
+	if (pthread_mutex_init(&table->life_checker, NULL) != 0)
+	{
+		pthread_mutex_destroy(&table->simulation);
+		pthread_mutex_destroy(&table->printer);
+		return (0);
+	}
+	if (pthread_mutex_init(&table->state_checker, NULL) != 0)
+	{
+		pthread_mutex_destroy(&table->life_checker);
+		pthread_mutex_destroy(&table->simulation);
+		pthread_mutex_destroy(&table->printer);
+		return (0);
+	}
+	if (!init_forks(table))
+		return (0);
+	return (1);
+}
+
 int	init_simulation(t_table *table, char **argv)
 {
 	ft_bzero(table, sizeof(t_table));
-	table->all_philos_alive = 1;
 	table->num_of_philos = ft_atol(argv[NUM_OF_PHILOS_IDX]);
 	table->time_to_die = ft_atol(argv[TTDIE_IDX]);
 	table->time_to_eat = ft_atol(argv[TTEAT_IDX]);
@@ -78,7 +91,7 @@ int	init_simulation(t_table *table, char **argv)
 	table->forks = ft_calloc(table->num_of_philos, sizeof(t_mutex));
 	if (!table->forks)
 		return (handle_error("Error allocating memory\n"), 0);
-	if (!init_forks(table))
+	if (!init_mutexes(table))
 		return (handle_error("Error initializing mutexes\n"), 0);
 	init_philos(table);
 	return (1);

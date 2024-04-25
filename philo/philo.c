@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:46:44 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/24 19:02:07 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:22:08 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	main(int argc, char **argv)
 		return (handle_error("Invalid arguments\n"), 1);
 	if (!init_simulation(&table, &argv[1]))
 		return (free_simulation_memory(&table), 1);
+	if (!run_simulation(&table))
+		return (clear_simulation(&table), 1);
 	clear_simulation(&table);
 	return (0);
 }

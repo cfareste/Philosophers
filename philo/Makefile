@@ -6,7 +6,7 @@
 #    By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/28 13:59:33 by cfidalgo          #+#    #+#              #
-#    Updated: 2024/04/24 19:04:11 by cfidalgo         ###   ########.fr        #
+#    Updated: 2024/04/25 16:32:36 by cfidalgo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,8 @@ FILES = philo.c \
 		checker.c \
 		initiators.c \
 		destroyers.c \
+		simulation.c \
+		simulation_helpers.c \
 		utils.c \
 		error_handler.c
 #==============================#

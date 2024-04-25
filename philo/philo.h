@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:01:57 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/24 19:00:57 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:56:23 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@
 # define TTEAT_IDX 2
 # define TTSLEEP_IDX 3
 # define MEALS_IDX 4
+
+// States macros
+# define TAKEN_FORK "has taken a fork\n"
+# define EATING "is eating\n"
+# define SLEEPING "is sleeping\n"
+# define THINKING "is thinking\n"
+# define DIED "died\n"
 
 # include <stdio.h>
 # include <unistd.h>
@@ -39,15 +46,17 @@ typedef struct s_philo	t_philo;
 
 struct s_table
 {
-	int		all_philos_alive;
+	int		stop_simulation;
 	int		num_of_philos;
 	int		meals_per_philo;
 	t_time	time_to_die;
 	t_time	time_to_eat;
 	t_time	time_to_sleep;
+	t_time	simulation_start;
 	t_philo	*philosophers;
 	t_mutex	*forks;
 	t_mutex	life_checker;
+	t_mutex	state_checker;
 	t_mutex	printer;
 	t_mutex	simulation;
 };
@@ -63,7 +72,6 @@ struct s_philo
 	t_table		*table;
 };
 
-
 // Checker
 int		check_args_validity(char **argv);
 
@@ -75,6 +83,16 @@ void	destroy_simulation_mutexes(t_table *table);
 void	destroy_forks_mutexes(t_table *table, int num_of_forks);
 void	free_simulation_memory(t_table *table);
 void	clear_simulation(t_table *table);
+
+// Simulation
+int		run_simulation(t_table *table);
+
+// Simulation utils
+t_time	get_time(void);
+void	print_state(t_table *table, t_philo *philo, char *state);
+void	kill_philo(t_table *table, t_philo *philo);
+void	suspend(t_time time);
+int		all_meals_eaten(t_table *table, int num_of_philos_eaten_enough);
 
 // Utils
 int		ft_isdigit(int c);
