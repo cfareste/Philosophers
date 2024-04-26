@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 10:44:02 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/25 18:29:18 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:25:27 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,48 +41,37 @@ static void	supervise_simulation(t_table *table)
 	}
 }
 
-static int	eat_meal(t_philo *philo)
+static int	check_simulation_state(t_philo *philo)
 {
-	pthread_mutex_lock(philo->right_fork);
-	print_state(philo->table, philo, TAKEN_FORK);
-	if (philo->right_fork == philo->left_fork)
-		return (pthread_mutex_unlock(philo->right_fork), 0);
-	pthread_mutex_lock(philo->left_fork);
-	print_state(philo->table, philo, TAKEN_FORK);
-	pthread_mutex_lock(&philo->table->state_checker);
-	print_state(philo->table, philo, EATING);
-	philo->last_meal = get_time();
-	philo->times_eaten++;
-	pthread_mutex_unlock(&philo->table->state_checker);
-	suspend(philo->table->time_to_eat);
-	pthread_mutex_unlock(philo->right_fork);
-	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_lock(&philo->table->life_checker);
+	if (philo->table->stop_simulation)
+	{
+		pthread_mutex_unlock(&philo->table->life_checker);
+		return (0);
+	}
+	pthread_mutex_unlock(&philo->table->life_checker);
 	return (1);
 }
 
 static void	*life_routine(t_philo *philo)
 {
+	int	i;
+
 	pthread_mutex_lock(&philo->table->simulation);
 	pthread_mutex_unlock(&philo->table->simulation);
+	i = THINK;
 	if (!(philo->num & 1))
+		i = SLEEP;
+	while (SIMULATION_IS_RUNNING)
 	{
-		print_state(philo->table, philo, SLEEPING);
-		suspend(philo->table->time_to_sleep);
-	}
-	while (1)
-	{
-		pthread_mutex_lock(&philo->table->life_checker);
-		if (philo->table->stop_simulation)
-		{
-			pthread_mutex_unlock(&philo->table->life_checker);
+		if (i == THINK && !check_simulation_state(philo))
 			break ;
-		}
-		pthread_mutex_unlock(&philo->table->life_checker);
-		print_state(philo->table, philo, THINKING);
-		if (!eat_meal(philo))
+		if (!philo->activities[i](philo))
 			break ;
-		print_state(philo->table, philo, SLEEPING);
-		suspend(philo->table->time_to_sleep);
+		if (i == SLEEP)
+			i = THINK;
+		else
+			i++;
 	}
 	return (NULL);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initiators.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:57:25 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/25 15:47:11 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:46:19 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ static void	init_philos(t_table *table)
 			table->philosophers[i].left_fork = &table->forks[i + 1];
 		else
 			table->philosophers[i].left_fork = &table->forks[0];
+		table->philosophers[i].activities[THINK] = think;
+		table->philosophers[i].activities[EAT] = eat;
+		table->philosophers[i].activities[SLEEP] = sleep_nap;
 		table->philosophers[i].table = table;
 		i++;
 	}

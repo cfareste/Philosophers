@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:01:57 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/25 15:56:23 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:40:30 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,20 @@
 # define MEALS_IDX 4
 
 // States macros
-# define TAKEN_FORK "has taken a fork\n"
-# define EATING "is eating\n"
-# define SLEEPING "is sleeping\n"
-# define THINKING "is thinking\n"
+# define TAKEN_FORK_STATE "has taken a fork\n"
+# define EATING_STATE "is eating\n"
+# define SLEEPING_STATE "is sleeping\n"
+# define THINKING_STATE "is thinking\n"
 # define DIED "died\n"
+
+// Simulation macros
+# define SIMULATION_IS_RUNNING 1
+
+// Activities macros
+# define NUM_OF_ACTIVITIES 3
+# define THINK 0
+# define EAT 1
+# define SLEEP 2
 
 # include <stdio.h>
 # include <unistd.h>
@@ -69,6 +78,7 @@ struct s_philo
 	t_time		last_meal;
 	t_mutex		*right_fork;
 	t_mutex		*left_fork;
+	int			(*activities[NUM_OF_ACTIVITIES]) (t_philo *philo);
 	t_table		*table;
 };
 
@@ -93,6 +103,11 @@ void	print_state(t_table *table, t_philo *philo, char *state);
 void	kill_philo(t_table *table, t_philo *philo);
 void	suspend(t_time time);
 int		all_meals_eaten(t_table *table, int num_of_philos_eaten_enough);
+
+// Activities
+int		think(t_philo *philo);
+int		eat(t_philo *philo);
+int		sleep_nap(t_philo *philo);
 
 // Utils
 int		ft_isdigit(int c);

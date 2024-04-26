@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+         #
+#    By: chris <chris@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/28 13:59:33 by cfidalgo          #+#    #+#              #
-#    Updated: 2024/04/25 16:32:36 by cfidalgo         ###   ########.fr        #
+#    Updated: 2024/04/26 16:37:28 by chris            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ FILES = philo.c \
 		destroyers.c \
 		simulation.c \
 		simulation_helpers.c \
+		activities.c \
 		utils.c \
 		error_handler.c
 #==============================#
