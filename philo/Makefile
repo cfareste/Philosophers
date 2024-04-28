@@ -6,7 +6,7 @@
 #    By: chris <chris@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/28 13:59:33 by cfidalgo          #+#    #+#              #
-#    Updated: 2024/04/26 16:37:28 by chris            ###   ########.fr        #
+#    Updated: 2024/04/28 15:32:21 by chris            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,10 +91,12 @@ $(OBJS_DIR)%.o: $(SRC_DIR)%.c Makefile
 
 clean:
 	@$(RMRF) $(OBJS_DIR)
+	@echo "$(RED)Objects and dependencies for $(YELLOW)'$(NAME)'$(RED) removed.$(DEF_COLOR)"
 
 
 fclean: clean
 	@$(RMRF) $(NAME)
+	@echo "$(RED)Removed program $(YELLOW)'$(NAME)'$(RED).$(DEF_COLOR)"
 
 
 re: fclean all
