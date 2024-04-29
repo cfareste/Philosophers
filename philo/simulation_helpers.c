@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 10:58:10 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/25 15:56:04 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/29 10:48:11 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	suspend(t_time time)
 	t_time	start_time;
 
 	start_time = get_time();
-	while (get_time() - start_time <= time)
+	while (get_time() - start_time < time)
 		usleep(100);
 }
 
