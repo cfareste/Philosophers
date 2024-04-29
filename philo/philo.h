@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:01:57 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/26 16:40:30 by chris            ###   ########.fr       */
+/*   Updated: 2024/04/29 14:53:03 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@
 # define DIED "died\n"
 
 // Simulation macros
-# define SIMULATION_IS_RUNNING 1
+# define RUNNING 1
+# define STOPPED 0
 
 // Activities macros
 # define NUM_OF_ACTIVITIES 3
@@ -65,7 +66,7 @@ struct s_table
 	t_philo	*philosophers;
 	t_mutex	*forks;
 	t_mutex	life_checker;
-	t_mutex	state_checker;
+	t_mutex	*philo_checkers;
 	t_mutex	printer;
 	t_mutex	simulation;
 };
@@ -78,7 +79,8 @@ struct s_philo
 	t_time		last_meal;
 	t_mutex		*right_fork;
 	t_mutex		*left_fork;
-	int			(*activities[NUM_OF_ACTIVITIES]) (t_philo *philo);
+	t_mutex		*philo_checker;
+	int			(*activities[NUM_OF_ACTIVITIES])(t_philo *philo);
 	t_table		*table;
 };
 
@@ -91,15 +93,17 @@ int		init_simulation(t_table *table, char **argv);
 // Destroyers
 void	destroy_simulation_mutexes(t_table *table);
 void	destroy_forks_mutexes(t_table *table, int num_of_forks);
+void	destroy_philo_checkers_mutexes(t_table *table, int num_of_checkers);
 void	free_simulation_memory(t_table *table);
 void	clear_simulation(t_table *table);
 
 // Simulation
+int		check_simulation_state(t_philo *philo);
 int		run_simulation(t_table *table);
 
 // Simulation utils
 t_time	get_time(void);
-void	print_state(t_table *table, t_philo *philo, char *state);
+int		print_state(t_table *table, t_philo *philo, char *state);
 void	kill_philo(t_table *table, t_philo *philo);
 void	suspend(t_time time);
 int		all_meals_eaten(t_table *table, int num_of_philos_eaten_enough);

@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:15:16 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/24 16:51:53 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/29 15:30:47 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	is_number(char *argument)
 	int	i;
 
 	i = 0;
+	if (!argument[i])
+		return (0);
 	if (argument[i] == '-' || argument[i] == '+')
 		i++;
 	while (argument[i] && argument[i] == '0')

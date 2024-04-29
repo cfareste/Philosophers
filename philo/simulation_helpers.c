@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 10:58:10 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/29 10:48:11 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/04/29 11:56:16 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,21 @@ t_time	get_time(void)
 	return (timestamp.tv_sec * 1000 + timestamp.tv_usec / 1000);
 }
 
-void	print_state(t_table *table, t_philo *philo, char *state)
+int	print_state(t_table *table, t_philo *philo, char *state)
 {
 	t_time	time_now;
 
 	time_now = get_time();
 	pthread_mutex_lock(&table->printer);
-	pthread_mutex_lock(&table->life_checker);
-	if (!table->stop_simulation)
+	if (check_simulation_state(philo) == RUNNING)
 	{
-		pthread_mutex_unlock(&table->life_checker);
 		printf("[%d] %d %s", time_now - table->simulation_start, \
 			philo->num, state);
+		pthread_mutex_unlock(&table->printer);
+		return (1);
 	}
-	else
-		pthread_mutex_unlock(&table->life_checker);
 	pthread_mutex_unlock(&table->printer);
+	return (0);
 }
 
 void	kill_philo(t_table *table, t_philo *philo)

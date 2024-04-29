@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 10:44:02 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/26 16:25:27 by chris            ###   ########.fr       */
+/*   Updated: 2024/04/29 14:56:25 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,22 @@ static void	supervise_simulation(t_table *table)
 			i = 0;
 			num_of_philos_eaten_enough = 0;
 		}
-		pthread_mutex_lock(&table->state_checker);
+		pthread_mutex_lock(table->philosophers[i].philo_checker);
 		if (table->meals_per_philo <= table->philosophers[i].times_eaten
 			&& table->meals_per_philo != -1)
 			num_of_philos_eaten_enough++;
-		pthread_mutex_unlock(&table->state_checker);
+		pthread_mutex_unlock(table->philosophers[i].philo_checker);
 		if (all_meals_eaten(table, num_of_philos_eaten_enough))
 			break ;
-		pthread_mutex_lock(&table->state_checker);
+		pthread_mutex_lock(table->philosophers[i].philo_checker);
 		if (get_time() - table->philosophers[i].last_meal >= table->time_to_die)
 			kill_philo(table, &table->philosophers[i]);
-		pthread_mutex_unlock(&table->state_checker);
+		pthread_mutex_unlock(table->philosophers[i].philo_checker);
 		i++;
 	}
 }
 
-static int	check_simulation_state(t_philo *philo)
+int	check_simulation_state(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->table->life_checker);
 	if (philo->table->stop_simulation)
@@ -56,20 +56,19 @@ static int	check_simulation_state(t_philo *philo)
 static void	*life_routine(t_philo *philo)
 {
 	int	i;
+	int	status;
 
 	pthread_mutex_lock(&philo->table->simulation);
 	pthread_mutex_unlock(&philo->table->simulation);
-	i = THINK;
+	i = 0;
 	if (!(philo->num & 1))
-		i = SLEEP;
-	while (SIMULATION_IS_RUNNING)
+		i = NUM_OF_ACTIVITIES - 1;
+	status = RUNNING;
+	while (status != STOPPED)
 	{
-		if (i == THINK && !check_simulation_state(philo))
-			break ;
-		if (!philo->activities[i](philo))
-			break ;
-		if (i == SLEEP)
-			i = THINK;
+		status = philo->activities[i](philo);
+		if (i == NUM_OF_ACTIVITIES - 1)
+			i = 0;
 		else
 			i++;
 	}
