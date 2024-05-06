@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:01:57 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/29 14:53:03 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/05/06 15:27:24 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include <string.h>
 # include <limits.h>
 # include <pthread.h>
 # include <sys/time.h>

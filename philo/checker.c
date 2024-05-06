@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:15:16 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/04/29 15:30:47 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/05/03 01:04:38 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	check_args_validity(char **argv)
 	i = 0;
 	while (argv[i])
 	{
-		if (!is_number(argv[i]) || !is_int(argv[i]) || ft_atol(argv[i]) < 0)
+		if (!is_number(argv[i]) || !is_int(argv[i]) || ft_atol(argv[i]) <= 0)
 			return (0);
 		i++;
 	}

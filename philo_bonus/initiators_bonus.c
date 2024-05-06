@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:57:25 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/05/03 00:26:02 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/05/06 13:04:21 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,24 @@ static int	open_semaphores(t_table *table)
 	return (1);
 }
 
+static int	init_mutexes(t_table *table)
+{
+	if (pthread_mutex_init(&table->pid_mutex, NULL) != 0)
+	{
+		close_semaphores(table);
+		unlink_semaphores();
+		return (0);
+	}
+	if (pthread_mutex_init(&table->simulation_checker, NULL) != 0)
+	{
+		close_semaphores(table);
+		unlink_semaphores();
+		pthread_mutex_destroy(&table->pid_mutex);
+		return (0);
+	}
+	return (1);
+}
+
 int	init_simulation(t_table *table, char **argv)
 {
 	ft_bzero(table, sizeof(t_table));
@@ -99,6 +117,8 @@ int	init_simulation(t_table *table, char **argv)
 		return (handle_error("Error allocating memory\n"), 0);
 	if (!open_semaphores(table))
 		return (handle_error("Error opening semaphores\n"), 0);
+	if (!init_mutexes(table))
+		return (handle_error("Error initializing mutexes\n"), 0);
 	init_philos(table);
 	return (1);
 }

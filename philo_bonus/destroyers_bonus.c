@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 18:51:21 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/05/03 00:25:39 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/05/06 13:04:02 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@ void	unlink_semaphores(void)
 	sem_unlink("/meals");
 }
 
+void	destroy_mutexes(t_table *table)
+{
+	pthread_mutex_destroy(&table->pid_mutex);
+	pthread_mutex_destroy(&table->simulation_checker);
+}
+
 void	free_simulation_memory(t_table *table)
 {
 	if (table->philosophers)
@@ -42,5 +48,6 @@ void	clear_simulation(t_table *table)
 {
 	close_semaphores(table);
 	unlink_semaphores();
+	destroy_mutexes(table);
 	free_simulation_memory(table);
 }

@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:01:57 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/05/03 01:27:27 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/05/06 15:25:10 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include <string.h>
 # include <signal.h>
 # include <limits.h>
 # include <pthread.h>
@@ -68,6 +67,8 @@ struct s_table
 	t_time	time_to_sleep;
 	t_time	simulation_start;
 	t_philo	*philosophers;
+	t_mutex	pid_mutex;
+	t_mutex	simulation_checker;
 	t_pth	meals_th;
 	t_pth	deads_th;
 	sem_t	*forks;
@@ -96,7 +97,7 @@ int		check_args_validity(char **argv);
 int		init_simulation(t_table *table, char **argv);
 
 // Destroyers
-void	destroy_mutexes(t_table *table, int num_of_mutexes);
+void	destroy_mutexes(t_table *table);
 void	close_semaphores(t_table *table);
 void	unlink_semaphores(void);
 void	free_simulation_memory(t_table *table);

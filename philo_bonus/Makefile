@@ -6,7 +6,7 @@
 #    By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/28 13:59:33 by cfidalgo          #+#    #+#              #
-#    Updated: 2024/05/03 01:40:17 by cfidalgo         ###   ########.fr        #
+#    Updated: 2024/05/02 10:35:21 by cfidalgo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ NAME = philo_bonus
 
 #=========# COMMANDS #=========#
 CC = GCC
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror
 
 RMRF = rm -rf
 MKDIR = mkdir -p

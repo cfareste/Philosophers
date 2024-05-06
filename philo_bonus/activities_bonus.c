@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 13:34:55 by chris             #+#    #+#             */
-/*   Updated: 2024/05/03 02:13:21 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/05/06 13:30:39 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	think(t_table *table, t_philo *philo)
 
 static int	take_forks(t_table *table, t_philo *philo)
 {
+	sem_wait(table->forks);
 	print_state(table, philo, TAKEN_FORK_STATE);
 	if (table->num_of_philos == 1)
 		return (sem_post(table->forks), 0);

@@ -6,7 +6,7 @@
 /*   By: cfidalgo <cfidalgo@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 10:44:02 by cfidalgo          #+#    #+#             */
-/*   Updated: 2024/05/03 02:07:55 by cfidalgo         ###   ########.fr       */
+/*   Updated: 2024/05/06 19:34:18 by cfidalgo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,22 @@ static void	check_meals(t_table *table)
 	i = 0;
 	while (i++ < table->num_of_philos)
 		sem_wait(table->meals);
+	pthread_mutex_lock(&table->simulation_checker);
 	if (table->stop_simulation)
+	{
+		pthread_mutex_unlock(&table->simulation_checker);
 		return ;
+	}
 	table->stop_simulation = 1;
+	pthread_mutex_unlock(&table->simulation_checker);
 	i = 0;
 	while (i < table->num_of_philos)
-		kill(table->philosophers[i++].process_id, SIGTERM);
+	{
+		pthread_mutex_lock(&table->pid_mutex);
+		kill(table->philosophers[i].process_id, SIGTERM);
+		pthread_mutex_unlock(&table->pid_mutex);
+		i++;
+	}
 	sem_post(table->deads);
 }
 
@@ -34,14 +44,21 @@ static void	check_deads(t_table *table)
 	int	i;
 
 	sem_wait(table->deads);
+	pthread_mutex_lock(&table->simulation_checker);
 	if (table->stop_simulation)
+	{
+		pthread_mutex_unlock(&table->simulation_checker);
 		return ;
+	}
 	table->stop_simulation = 1;
+	pthread_mutex_unlock(&table->simulation_checker);
 	i = 0;
 	while (i < table->num_of_philos)
 	{
 		sem_post(table->meals);
+		pthread_mutex_lock(&table->pid_mutex);
 		kill(table->philosophers[i].process_id, SIGTERM);
+		pthread_mutex_unlock(&table->pid_mutex);
 		i++;
 	}
 }
@@ -58,6 +75,8 @@ static void	life_routine(t_table *table, t_philo *philo)
 	sem_post(table->simulation);
 	i = 0;
 	status = RUNNING;
+	if (!(philo->num & 1))
+		i = NUM_OF_ACTIVITIES - 1;
 	while (status != STOPPED)
 	{
 		status = philo->activities[i](table, philo);
@@ -109,7 +128,9 @@ int	run_simulation(t_table *table)
 	table->simulation_start = get_time();
 	while (i < table->num_of_philos)
 	{
+		pthread_mutex_lock(&table->pid_mutex);
 		table->philosophers[i].process_id = fork();
+		pthread_mutex_unlock(&table->pid_mutex);
 		if (table->philosophers[i].process_id == -1)
 			return (handle_error("Error creating processes\n"), 0);
 		if (table->philosophers[i].process_id == 0)
